@@ -1,16 +1,15 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import "./ContactList.css";
-import {
-  useDeleteContactMutation,
-  useGetAllContactsQuery,
-} from "../../redux/contact/contactSlice";
+import contactSelectors from "../../redux/contact/contact-selectors";
+import contactsOperations from "../../redux/contact/contact-operations";
 
 const ContactList = () => {
-  let contacts = [];
-  const { data, isSuccess } = useGetAllContactsQuery();
-  if (isSuccess) {
-    contacts = data;
-  }
+  const dispatch = useDispatch();
+  let contacts = useSelector(contactSelectors.getAllContacts);
+  // const { data, isSuccess } = useGetAllContactsQuery();
+  // if (isSuccess) {
+  //   contacts = data;
+  // }
 
   const filter = useSelector((state) => state.filter);
   const filteredContacts = () => {
@@ -19,7 +18,8 @@ const ContactList = () => {
     );
   };
 
-  const [deleteContact] = useDeleteContactMutation();
+  const deleteContact = (id) => dispatch(contactsOperations.deleteContact(id));
+  //const [deleteContact] = useDeleteContactMutation();
 
   return (
     <ul className="ContactList">
