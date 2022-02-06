@@ -8,6 +8,7 @@ import RegisterView from "./views/RegisterView";
 import LoginView from "./views/LoginView";
 import Container from "./components/Container";
 import { authOperations } from "./redux/auth";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -20,10 +21,17 @@ const App = () => {
     <Container>
       <AppBar />
       <Routes>
-        <Route exact path="/" element={<HomeView />} />
+        <Route path="/" element={<HomeView />} />
         <Route path="/register" element={<RegisterView />} />
         <Route path="/login" element={<LoginView />} />
-        <Route path="/contacts" element={<ContactsView />} />
+        <Route
+          path="/contacts"
+          element={
+            <PrivateRoute>
+              <ContactsView />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Container>
   );
