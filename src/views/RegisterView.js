@@ -1,17 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { authOperations } from "../redux/auth";
-
-const styles = {
-  form: {
-    width: 320,
-  },
-  label: {
-    display: "flex",
-    flexDirection: "column",
-    marginBottom: 15,
-  },
-};
+import "./viewStyles.css";
 
 export default function RegisterView() {
   const dispatch = useDispatch();
@@ -41,18 +31,25 @@ export default function RegisterView() {
   };
 
   return (
-    <div>
-      <h1>Registration page</h1>
+    <div className="contact-container">
+      <h1 className="contact-heading">create account</h1>
 
-      <form onSubmit={handleSubmit} style={styles.form} autoComplete="off">
-        <label style={styles.label}>
+      <form onSubmit={handleSubmit} className="contact-form" autoComplete="off">
+        <label className="contact-label">
           Name
-          <input type="text" name="name" value={name} onChange={handleChange} />
+          <input
+            type="text"
+            className="contact-input"
+            name="name"
+            value={name}
+            onChange={handleChange}
+          />
         </label>
 
-        <label style={styles.label}>
+        <label className="contact-label">
           e-mail
           <input
+            className="contact-input"
             type="email"
             name="email"
             value={email}
@@ -60,9 +57,10 @@ export default function RegisterView() {
           />
         </label>
 
-        <label style={styles.label}>
+        <label className="contact-label">
           Password
           <input
+            className="contact-input"
             type="password"
             name="password"
             value={password}
@@ -71,7 +69,9 @@ export default function RegisterView() {
           />
         </label>
 
-        <button type="submit">Register</button>
+        <button type="submit" className="button">
+          sign up
+        </button>
       </form>
     </div>
   );
