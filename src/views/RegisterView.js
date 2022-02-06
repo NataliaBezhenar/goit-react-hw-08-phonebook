@@ -66,6 +66,7 @@ export default function RegisterView() {
             type="password"
             name="password"
             value={password}
+            autoComplete="on"
             onChange={handleChange}
           />
         </label>
