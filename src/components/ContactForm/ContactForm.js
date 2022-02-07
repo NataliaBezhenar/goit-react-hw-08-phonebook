@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import shortid from "shortid";
 import "./ContactForm.css";
 
-//import { addContact } from "../../redux/contact/contact-actions";
 import contactsOperations from "../../redux/contact/contact-operations";
 
 export default function ContactForm() {

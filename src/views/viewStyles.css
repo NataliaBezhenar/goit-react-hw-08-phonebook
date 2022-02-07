@@ -4,7 +4,8 @@
   justify-content: center;
   background-image: url("./backdrop.jpg");
   background-repeat: no-repeat;
-  box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+  background-size: cover;
+  box-shadow: 5px 10px 8px rgba(0, 0, 0, 0.5);
 }
 
 .title {
@@ -12,11 +13,12 @@
   font-size: 48px;
   text-align: center;
   color: rgb(52, 52, 52);
-  margin-top: 25%;
+  margin-top: 30%;
 }
 
 .contact-container {
   background-image: url("./backdrop.jpg");
+  background-size: cover;
   background-repeat: no-repeat;
   min-height: calc(100vh - 50px);
   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);

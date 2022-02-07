@@ -1,5 +1,7 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 axios.defaults.baseURL = "https://connections-api.herokuapp.com/";
 
@@ -12,60 +14,57 @@ const token = {
   },
 };
 
-/*
- * POST @ /users/signup
- * body: { name, email, password }
- * После успешной регистрации добавляем токен в HTTP-заголовок
- */
 const register = createAsyncThunk("auth/register", async (credentials) => {
   try {
     const { data } = await axios.post("/users/signup", credentials);
     token.set(data.token);
     return data;
   } catch (error) {
-    // TODO: Добавить обработку ошибки error.message
+    const registerError = {
+      name: "User creation error",
+      message: error.response.statusText,
+      data: error.response.data,
+      code: error.response.status,
+    };
+    alert(registerError.name + ". Error code: " + registerError.code);
+    throw registerError;
   }
 });
 
-/*
- * POST @ /users/login
- * body: { email, password }
- * После успешного логина добавляем токен в HTTP-заголовок
- */
 const logIn = createAsyncThunk("auth/login", async (credentials) => {
   try {
     const { data } = await axios.post("/users/login", credentials);
     token.set(data.token);
     return data;
   } catch (error) {
-    // TODO: Добавить обработку ошибки error.message
-    console.log("wrong user");
-    console.log(error);
+    const loginError = {
+      name: "Login error",
+      message: error.response.statusText,
+      data: error.response.data,
+      code: error.response.status,
+    };
+    alert(loginError.name + ". Error code: " + loginError.code);
+    throw loginError;
   }
 });
 
-/*
- * POST @ /users/logout
- * headers: Authorization: Bearer token
- * После успешного логаута, удаляем токен из HTTP-заголовка
- */
 const logOut = createAsyncThunk("auth/logout", async () => {
   try {
     await axios.post("/users/logout");
+
     token.unset();
   } catch (error) {
-    // TODO: Добавить обработку ошибки error.message
+    const logoutError = {
+      name: "Logout error",
+      message: error.response.statusText,
+      data: error.response.data,
+      code: error.response.status,
+    };
+    alert(logoutError.name + ". Error code: " + logoutError.code);
+    throw logoutError;
   }
 });
-/*
- * GET @ /users/current
- * headers:
- *    Authorization: Bearer token
- *
- * 1. Забираем токен из стейта через getState()
- * 2. Если токена нет, выходим не выполняя никаких операций
- * 3. Если токен есть, добавляет его в HTTP-заголовок и выполянем операцию
- */
+
 const fetchCurrentUser = createAsyncThunk(
   "auth/refresh",
   async (_, thunkAPI) => {
@@ -82,7 +81,18 @@ const fetchCurrentUser = createAsyncThunk(
       const { data } = await axios.get("/users/current");
       return data;
     } catch (error) {
-      // TODO: Добавить обработку ошибки error.message
+      const fetchCurrentUserError = {
+        name: "Fetch current user error",
+        message: error.response.statusText,
+        data: error.response.data,
+        code: error.response.status,
+      };
+      alert(
+        fetchCurrentUserError.name +
+          ". Error code: " +
+          fetchCurrentUserError.code
+      );
+      throw fetchCurrentUserError;
     }
   }
 );

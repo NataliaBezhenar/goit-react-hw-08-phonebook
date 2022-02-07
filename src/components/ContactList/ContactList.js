@@ -6,10 +6,6 @@ import contactsOperations from "../../redux/contact/contact-operations";
 const ContactList = () => {
   const dispatch = useDispatch();
   let contacts = useSelector(contactSelectors.getAllContacts);
-  // const { data, isSuccess } = useGetAllContactsQuery();
-  // if (isSuccess) {
-  //   contacts = data;
-  // }
 
   const filter = useSelector((state) => state.filter);
   const filteredContacts = () => {
@@ -19,7 +15,6 @@ const ContactList = () => {
   };
 
   const deleteContact = (id) => dispatch(contactsOperations.deleteContact(id));
-  //const [deleteContact] = useDeleteContactMutation();
 
   return (
     <ul className="ContactList">
