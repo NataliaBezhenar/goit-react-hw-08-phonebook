@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AppBar from "./components/AppBar/AppBar";
 import ContactsView from "./views/ContactsView";
 import HomeView from "./views/HomeView";
@@ -50,6 +52,7 @@ const App = () => {
             }
           />
         </Routes>
+        <ToastContainer autoClose={2000} />
       </Container>
     )
   );

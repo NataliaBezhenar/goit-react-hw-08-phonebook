@@ -1,6 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 axios.defaults.baseURL = "https://connections-api.herokuapp.com/";
@@ -14,66 +14,66 @@ const token = {
   },
 };
 
-const register = createAsyncThunk("auth/register", async (credentials) => {
-  try {
-    const { data } = await axios.post("/users/signup", credentials);
-    token.set(data.token);
-    return data;
-  } catch (error) {
-    const registerError = {
-      name: "User creation error",
-      message: error.response.statusText,
-      data: error.response.data,
-      code: error.response.status,
-    };
-    alert(registerError.name + ". Error code: " + registerError.code);
-    throw registerError;
+const register = createAsyncThunk(
+  "auth/register",
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post("/users/signup", credentials);
+      token.set(data.token);
+      return data;
+    } catch (error) {
+      if (error.response.status === 400) {
+        toast.error("User creation error, please try again");
+      }
+      if (error.response.status === 500) {
+        toast.error("Server error, please try later");
+      }
+      return rejectWithValue(error);
+    }
   }
-});
+);
 
-const logIn = createAsyncThunk("auth/login", async (credentials) => {
-  try {
-    const { data } = await axios.post("/users/login", credentials);
-    token.set(data.token);
-    return data;
-  } catch (error) {
-    const loginError = {
-      name: "Login error",
-      message: error.response.statusText,
-      data: error.response.data,
-      code: error.response.status,
-    };
-    alert(loginError.name + ". Error code: " + loginError.code);
-    throw loginError;
+const logIn = createAsyncThunk(
+  "auth/login",
+  async (credentials, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post("/users/login", credentials);
+      token.set(data.token);
+      return data;
+    } catch (error) {
+      if (error.response.status === 400) {
+        toast.error("Invalid email or password");
+
+        return rejectWithValue(error);
+      }
+    }
   }
-});
+);
 
-const logOut = createAsyncThunk("auth/logout", async () => {
-  try {
-    await axios.post("/users/logout");
+const logOut = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      await axios.post("/users/logout");
 
-    token.unset();
-  } catch (error) {
-    const logoutError = {
-      name: "Logout error",
-      message: error.response.statusText,
-      data: error.response.data,
-      code: error.response.status,
-    };
-    alert(logoutError.name + ". Error code: " + logoutError.code);
-    throw logoutError;
+      token.unset();
+    } catch (error) {
+      if (error.response.status === 500) {
+        toast.error("Server error, please try again later");
+      }
+      return rejectWithValue(error);
+    }
   }
-});
+);
 
 const fetchCurrentUser = createAsyncThunk(
   "auth/refresh",
-  async (_, thunkAPI) => {
-    const state = thunkAPI.getState();
+  async (_, { rejectWithValue, getState }) => {
+    const state = getState();
     const persistedToken = state.auth.token;
 
     if (persistedToken === null) {
-      console.log("Токена нет, уходим из fetchCurrentUser");
-      return thunkAPI.rejectWithValue();
+      return rejectWithValue();
     }
 
     token.set(persistedToken);
@@ -81,18 +81,8 @@ const fetchCurrentUser = createAsyncThunk(
       const { data } = await axios.get("/users/current");
       return data;
     } catch (error) {
-      const fetchCurrentUserError = {
-        name: "Fetch current user error",
-        message: error.response.statusText,
-        data: error.response.data,
-        code: error.response.status,
-      };
-      alert(
-        fetchCurrentUserError.name +
-          ". Error code: " +
-          fetchCurrentUserError.code
-      );
-      throw fetchCurrentUserError;
+      toast.info("Authorization is outdated");
+      return rejectWithValue(error);
     }
   }
 );
@@ -103,4 +93,5 @@ const operations = {
   logIn,
   fetchCurrentUser,
 };
+
 export default operations;
